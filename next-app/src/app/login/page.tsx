@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { Package, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -53,13 +54,26 @@ function LoginForm() {
     <div className="w-full max-w-md bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-xl p-8 sm:p-10">
       {/* Brand Header */}
       <div className="text-center space-y-2 mb-8">
-        <Link href="/" className="inline-flex items-center gap-2 group mb-2">
-          <span className="w-10 h-10 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center font-black shadow-sm group-hover:scale-105 transition-transform duration-200">
-            <Package className="w-5 h-5 stroke-[2.2]" />
-          </span>
-          <span className="text-2xl font-black tracking-tight text-stone-900 dark:text-white">
-            Blossom<span className="text-amber-500">&amp;</span>Box
-          </span>
+        <Link href="/" className="inline-flex items-center gap-3 group mb-2">
+          <div className="relative w-11 h-11 rounded-full overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-200 ring-1 ring-amber-500/20 bg-amber-50 dark:bg-stone-900 shrink-0">
+            <Image
+              src="/logo.png"
+              alt="Blossom & Box Gh Logo"
+              width={44}
+              height={44}
+              className="w-full h-full object-cover"
+              priority
+            />
+          </div>
+          <div className="text-left">
+            <span className="text-2xl font-black tracking-tight text-stone-900 dark:text-white flex items-center leading-none">
+              Blossom<span className="text-amber-500">&amp;</span>Box
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-400 ml-1">Gh</span>
+            </span>
+            <span className="text-[10px] text-stone-500 dark:text-stone-400 font-medium tracking-tight block mt-0.5">
+              Where every gift blooms.
+            </span>
+          </div>
         </Link>
         <h1 className="text-2xl font-extrabold text-stone-900 dark:text-white">Customer Sign In</h1>
         <p className="text-xs text-stone-500 dark:text-stone-400">

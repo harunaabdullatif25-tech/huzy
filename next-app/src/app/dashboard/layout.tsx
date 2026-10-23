@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Package, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -8,11 +9,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <header className="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 sticky top-16 z-30 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
           <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <span className="text-lg font-black text-stone-900 dark:text-white flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-amber-500 text-stone-950 flex items-center justify-center font-bold">
-                  <Package className="w-4 h-4 stroke-[2.4]" />
-                </span>
+            <Link href="/dashboard" className="flex items-center gap-2.5">
+              <div className="relative w-8 h-8 rounded-full overflow-hidden ring-1 ring-amber-500/30 bg-amber-50 shadow-sm shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="Blossom & Box Gh"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-lg font-black text-stone-900 dark:text-white flex items-center gap-1.5">
                 <span>Blossom&amp;Box</span>
                 <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/15 text-amber-800 dark:text-amber-300 rounded-full border border-amber-500/30">
                   Admin

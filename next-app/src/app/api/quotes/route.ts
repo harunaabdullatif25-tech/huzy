@@ -21,6 +21,14 @@ export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     const body = await req.json();
+
+    if (!body.phone || !String(body.phone).trim()) {
+      return NextResponse.json(
+        { error: 'Phone / WhatsApp number is required.' },
+        { status: 400 }
+      );
+    }
+
     const quote = await QuoteModel.create(body);
     return NextResponse.json(quote, { status: 201 });
   } catch (error) {

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ShieldCheck, Mail, Lock, Eye, EyeOff, ArrowRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -57,13 +58,21 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md bg-stone-900/90 backdrop-blur-xl border border-stone-800 rounded-3xl shadow-2xl p-8 sm:p-10 relative z-10">
         {/* Header */}
         <div className="text-center space-y-3 mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500 text-stone-950 flex items-center justify-center font-black mx-auto shadow-lg shadow-amber-500/20">
-            <ShieldCheck className="w-7 h-7 stroke-[2.4]" />
+          <div className="relative w-16 h-16 rounded-full overflow-hidden mx-auto shadow-lg shadow-amber-500/20 ring-2 ring-amber-500/40 bg-stone-900">
+            <Image
+              src="/logo.png"
+              alt="Blossom & Box Gh Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-cover"
+              priority
+            />
           </div>
           <div>
             <h1 className="text-2xl font-black tracking-tight text-white">Admin Control Portal</h1>
+            <p className="text-xs text-amber-400 font-serif italic mt-0.5">Where every gift blooms.</p>
             <p className="text-xs text-stone-400 mt-1">
-              Blossom&amp;Box Merchant Administration &amp; Operations
+              Blossom&amp;Box Gh Merchant Administration &amp; Operations
             </p>
           </div>
         </div>

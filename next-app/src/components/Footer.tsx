@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Package, Zap, Rocket, Truck, MessageCircle } from 'lucide-react';
+import { Package, Zap, Rocket, Truck, MessageCircle, Phone } from 'lucide-react';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -21,17 +22,32 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <span className="text-xl font-black text-white flex items-center gap-2">
-              <span className="w-7 h-7 rounded-lg bg-amber-500 text-stone-950 flex items-center justify-center font-bold">
-                <Package className="w-4 h-4 stroke-[2.4]" />
-              </span>
-              <span>
-                Blossom<span className="text-amber-400">&amp;</span>Box
-              </span>
-            </span>
+            <Link href="/" className="inline-flex items-center gap-3 group">
+              <div className="relative w-11 h-11 rounded-full overflow-hidden ring-2 ring-amber-500/30 bg-amber-50 shadow-md shrink-0 group-hover:scale-105 transition-transform">
+                <Image
+                  src="/logo.png"
+                  alt="Blossom & Box Gh Logo"
+                  width={44}
+                  height={44}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-black text-white flex items-center leading-none">
+                  Blossom<span className="text-amber-400">&amp;</span>Box&nbsp;<span className="text-amber-400 text-sm">Gh</span>
+                </span>
+                <span className="text-[11px] text-amber-200/80 italic font-serif mt-1">
+                  Where every gift blooms.
+                </span>
+              </div>
+            </Link>
             <p className="text-sm text-stone-400 leading-relaxed">
-              Specialized packaging and box e-commerce platform. Order bespoke boxes from 1 unit with custom dimensions, tailored exterior colors, and express rush delivery.
+              Specialized packaging and bespoke boxes crafted to any custom size and color. Order from 1 unit with nationwide delivery in Ghana.
             </p>
+            <div className="flex items-center gap-2 pt-1 text-xs text-stone-300">
+              <Phone className="w-3.5 h-3.5 text-amber-400" />
+              <span>Contact us: <a href="tel:0257724026" className="font-bold text-white hover:text-amber-400 transition-colors">0257724026</a></span>
+            </div>
             <div className="flex items-center gap-3">
               <a
                 href={`https://tiktok.com/${tiktokHandle}`}

@@ -1,12 +1,12 @@
 // src/app/dashboard/quotes/[id]/page.tsx
-// 'use client' — Quote detail with admin controls and WhatsApp modal
+// 'use client' — Quote detail with admin controls and direct customer WhatsApp button
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { QuoteStatus } from '@/models/Quote.model';
-import { MessageSquare } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
 const ALL_STATUSES: QuoteStatus[] = ['new', 'reviewed', 'proposal_sent', 'accepted', 'rejected'];
 
@@ -55,10 +55,6 @@ export default function QuoteDetailPage() {
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
 
-  // WhatsApp modal
-  const [waOpen, setWaOpen] = useState(false);
-  const [waMessage, setWaMessage] = useState('');
-
   useEffect(() => {
     fetch(`/api/quotes/${id}`)
       .then((r) => r.json())
@@ -96,35 +92,34 @@ export default function QuoteDetailPage() {
     }
   }
 
-  function openWhatsApp() {
-    if (!quote) return;
-    const price = proposedPrice ? `GH₵${proposedPrice}` : '[price TBD]';
+  // Generate direct WhatsApp link to customer's phone number with pre-filled message
+  const waUrl = useMemo(() => {
+    if (!quote?.phone) return null;
+    let digits = quote.phone.replace(/\D/g, '');
+    if (!digits) return null;
+    // Normalize local Ghanaian 10-digit number (e.g. 024XXXXXXX -> 23324XXXXXXX)
+    if (digits.startsWith('0') && digits.length === 10) {
+      digits = '233' + digits.slice(1);
+    }
+
+    const price = proposedPrice ? `GH₵${proposedPrice}` : '';
     const sizingDetail =
       quote.sizingMode === 'vendor_decides'
-        ? `sized to fit: "${quote.contentsDescription || 'your items'}"`
+        ? `sized to fit "${quote.contentsDescription || 'your items'}"`
         : quote.dimensions?.length
         ? `(${quote.dimensions.length}×${quote.dimensions.width}×${quote.dimensions.height} ${quote.dimensions.unit || 'cm'})`
         : '';
-    setWaMessage(
-      `Dear ${quote.fullName}, thank you for your quote request for ${quote.boxType} ${sizingDetail}. Our proposed price is ${price}. Please reply to confirm.`,
-    );
-    setWaOpen(true);
-  }
 
-  async function sendWhatsApp() {
-    if (!quote?.phone) { alert('No phone number on file.'); return; }
-    try {
-      await fetch('/api/whatsapp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: quote.phone, message: waMessage }),
-      });
-      alert('Message sent!');
-      setWaOpen(false);
-    } catch {
-      alert('Failed to send message.');
+    let message = `Hello ${quote.fullName}, thank you for contacting Blossom&Box regarding your quote request for ${quote.boxType}`;
+    if (sizingDetail) message += ` ${sizingDetail}`;
+    message += ` (Qty: ${quote.quantity}).`;
+    if (price) {
+      message += ` Our proposed price is ${price}.`;
     }
-  }
+    message += ` Please let us know if you would like to proceed or have any questions!`;
+
+    return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+  }, [quote, proposedPrice]);
 
   const inputCls =
     'block w-full rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 px-3 py-2 text-sm text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-500 shadow-xs focus:border-amber-500 dark:focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors';
@@ -155,7 +150,23 @@ export default function QuoteDetailPage() {
         <dl>
           <Row label="Name" value={quote.fullName} />
           <Row label="Email" value={quote.email} />
-          <Row label="Phone" value={quote.phone} />
+          <div className="flex gap-2 py-2 border-b border-stone-100 dark:border-stone-800/80 last:border-0">
+            <dt className="w-44 flex-shrink-0 text-sm font-medium text-stone-500 dark:text-stone-400">Phone / WhatsApp</dt>
+            <dd className="text-sm font-semibold text-stone-900 dark:text-stone-100 flex items-center gap-3">
+              <span>{quote.phone || 'Not provided'}</span>
+              {waUrl && (
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 text-xs font-semibold hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Open WhatsApp</span>
+                </a>
+              )}
+            </dd>
+          </div>
           <Row label="Company" value={quote.company} />
           <Row label="Submitted" value={new Date(quote.createdAt).toLocaleString()} />
         </dl>
@@ -238,48 +249,33 @@ export default function QuoteDetailPage() {
           >
             {saving ? 'Saving…' : 'Save'}
           </button>
-          <button
-            type="button"
-            onClick={openWhatsApp}
-            className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] px-5 py-2.5 text-sm font-semibold text-white shadow-xs hover:shadow flex items-center gap-2 transition"
-          >
-            <MessageSquare className="w-4 h-4" />
-            <span>Send WhatsApp Message</span>
-          </button>
+
+          {waUrl ? (
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] px-5 py-2.5 text-sm font-semibold text-white shadow-xs hover:shadow flex items-center gap-2 transition"
+              title={`Open WhatsApp chat with ${quote.phone}`}
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Chat on Customer&apos;s WhatsApp</span>
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="rounded-lg bg-stone-200 dark:bg-stone-800 px-5 py-2.5 text-sm font-medium text-stone-400 dark:text-stone-500 flex items-center gap-2 cursor-not-allowed"
+              title="Customer did not provide a phone number"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>No WhatsApp Number Provided</span>
+            </button>
+          )}
+
           {saveMsg && <span className="text-sm font-medium text-stone-600 dark:text-stone-300">{saveMsg}</span>}
         </div>
       </section>
-
-      {/* ── WhatsApp Modal ── */}
-      {waOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 shadow-2xl space-y-4 mx-4">
-            <h3 className="text-lg font-semibold text-stone-900 dark:text-white">Send WhatsApp Message</h3>
-            <p className="text-sm text-stone-500 dark:text-stone-400">To: <span className="font-semibold text-stone-900 dark:text-stone-100">{quote.phone ?? 'No phone on file'}</span></p>
-            <textarea
-              className={`${inputCls} min-h-[120px]`}
-              value={waMessage}
-              onChange={(e) => setWaMessage(e.target.value)}
-            />
-            <div className="flex gap-3 justify-end pt-2">
-              <button
-                type="button"
-                onClick={() => setWaOpen(false)}
-                className="rounded-lg border border-stone-300 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 px-4 py-2 text-sm font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 transition"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={sendWhatsApp}
-                className="rounded-lg bg-emerald-600 hover:bg-emerald-700 px-5 py-2 text-sm font-semibold text-white shadow-xs transition"
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

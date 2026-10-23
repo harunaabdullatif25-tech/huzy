@@ -22,7 +22,7 @@ export type SizingMode = 'custom_dimensions' | 'vendor_decides';
 export interface IQuote extends Document {
   fullName: string;
   email: string;
-  phone?: string;
+  phone: string;
   company?: string;
   boxType: string;
   sizingMode?: SizingMode;
@@ -51,7 +51,7 @@ const QuoteSchema = new Schema<IQuote>(
   {
     fullName: { type: String, required: true },
     email: { type: String, required: true },
-    phone: { type: String },
+    phone: { type: String, required: true },
     company: { type: String },
     boxType: { type: String, required: true },
     sizingMode: {

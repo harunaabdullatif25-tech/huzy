@@ -19,9 +19,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Blossom&Box – Premium Custom Packaging & Boxes',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  title: 'Blossom & Box Gh – Where Every Gift Blooms | Bespoke Packaging & Boxes',
   description:
-    'Blossom&Box is a specialized packaging e-commerce platform offering bespoke made-to-order boxes, MOQ = 1, gold-standard quality, and express delivery.',
+    'Blossom & Box Gh is a specialized packaging e-commerce platform offering bespoke made-to-order boxes, MOQ = 1, custom dimensions & colors, and express delivery in Ghana.',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
+  openGraph: {
+    title: 'Blossom & Box Gh – Where Every Gift Blooms',
+    description:
+      'Bespoke made-to-order boxes and premium gift packaging in Ghana. Start from 1 unit.',
+    images: [{ url: '/logo.png' }],
+  },
 };
 
 export default function RootLayout({

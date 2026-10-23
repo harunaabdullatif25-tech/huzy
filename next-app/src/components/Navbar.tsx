@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -43,13 +44,25 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Brand Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <span className="w-9 h-9 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center font-black shadow-sm group-hover:scale-105 transition-transform duration-200">
-                <Package className="w-5 h-5 stroke-[2.2] text-stone-950" />
-              </span>
-              <span className="text-xl sm:text-2xl font-black tracking-tight text-stone-900 dark:text-white flex items-center">
-                Blossom<span className="text-amber-500 font-extrabold">&amp;</span>Box
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 ml-1" />
-              </span>
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-200 ring-1 ring-amber-500/20 bg-amber-50 dark:bg-stone-900 shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="Blossom & Box Gh Logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg sm:text-xl font-black tracking-tight text-stone-900 dark:text-white flex items-center leading-none">
+                  Blossom<span className="text-amber-500 font-extrabold">&amp;</span>Box
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400 ml-1">Gh</span>
+                </span>
+                <span className="text-[10px] font-medium text-stone-500 dark:text-stone-400 tracking-tight hidden sm:block mt-0.5">
+                  Where every gift blooms.
+                </span>
+              </div>
             </Link>
 
             {/* Nav: Home, Box Catalog, and Theme Toggle */}
@@ -97,15 +110,27 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="w-9 h-9 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center font-black shadow-sm group-hover:scale-105 transition-transform duration-200">
-              <Package className="w-5 h-5 stroke-[2.2] text-stone-950" />
-            </span>
-            <span className="text-xl sm:text-2xl font-black tracking-tight text-stone-900 dark:text-white flex items-center">
-              Blossom<span className="text-amber-500 font-extrabold">&amp;</span>Box
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 ml-1" />
-            </span>
-            <span className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-[11px] font-bold text-stone-900 dark:text-white ml-1.5">
-              <Zap className="w-3 h-3 text-stone-900 dark:text-white" />
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-200 ring-1 ring-amber-500/20 bg-amber-50 dark:bg-stone-900 shrink-0">
+              <Image
+                src="/logo.png"
+                alt="Blossom & Box Gh Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover"
+                priority
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg sm:text-xl font-black tracking-tight text-stone-900 dark:text-white flex items-center leading-none">
+                Blossom<span className="text-amber-500 font-extrabold">&amp;</span>Box
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 ml-1">Gh</span>
+              </span>
+              <span className="text-[10px] font-medium text-stone-500 dark:text-stone-400 tracking-tight hidden sm:block mt-0.5">
+                Where every gift blooms.
+              </span>
+            </div>
+            <span className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-[11px] font-bold text-stone-900 dark:text-white ml-1.5">
+              <Zap className="w-3 h-3 text-amber-500" />
               Min 1 Unit
             </span>
           </Link>

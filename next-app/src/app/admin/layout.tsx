@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Package,
@@ -50,10 +51,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
           {/* Left: Brand + Nav */}
           <div className="flex items-center gap-8">
-            <Link href="/admin" className="flex items-center gap-2 group">
-              <span className="w-8 h-8 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center font-black shadow-sm group-hover:scale-105 transition-transform duration-200">
-                <Package className="w-4 h-4 stroke-[2.4]" />
-              </span>
+            <Link href="/admin" className="flex items-center gap-2.5 group">
+              <div className="relative w-8 h-8 rounded-full overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-200 ring-1 ring-amber-500/30 bg-amber-50 dark:bg-stone-800 shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="Blossom & Box Gh"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-base font-black tracking-tight text-stone-900 dark:text-white">
                   Blossom<span className="text-amber-500">&amp;</span>Box

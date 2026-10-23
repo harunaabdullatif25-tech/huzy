@@ -84,9 +84,15 @@ export default function HomePage() {
         <div className="mx-auto max-w-5xl px-4 flex flex-col items-center text-center gap-6">
           {/* Floating Pill Badge */}
           <div className="inline-flex items-center gap-2 rounded-full bg-stone-900/80 border border-amber-500/40 px-4 py-1.5 text-xs sm:text-sm font-semibold backdrop-blur-md shadow-lg">
-            <Sparkles className="w-4 h-4 text-white" />
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-amber-300 font-serif italic">Blossom &amp; Box Gh</span>
+            <span className="text-stone-400">·</span>
             <span className="text-stone-200">
-              100% MADE-TO-ORDER · CHOOSE ANY SIZE &amp; COLOR · START FROM 1 BOX
+              Where Every Gift Blooms
+            </span>
+            <span className="hidden sm:inline text-stone-400">·</span>
+            <span className="hidden sm:inline text-stone-300 font-normal">
+              From 1 Unit
             </span>
           </div>
 
