@@ -35,6 +35,15 @@ function SignupForm() {
       setError('Please enter a valid email address.');
       return;
     }
+    if (!phone.trim()) {
+      setError('Please enter your WhatsApp phone number.');
+      return;
+    }
+    const cleanDigits = phone.replace(/\D/g, '');
+    if (cleanDigits.length < 9) {
+      setError('Please enter a valid WhatsApp phone number (minimum 9 digits).');
+      return;
+    }
     if (password.length < 6) {
       setError('Password must be at least 6 characters long.');
       return;
@@ -51,7 +60,7 @@ function SignupForm() {
         name: name.trim(),
         email: email.trim(),
         password,
-        phone: phone.trim() || undefined,
+        phone: phone.trim(),
       });
 
       if (result.success) {
@@ -143,21 +152,26 @@ function SignupForm() {
           </div>
         </div>
 
-        {/* Phone */}
+        {/* WhatsApp Phone Number */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400 mb-1.5">
-            Phone Number <span className="text-[10px] lowercase font-normal text-stone-400">(optional)</span>
+          <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400 mb-1.5 flex items-center justify-between">
+            <span>WhatsApp Number *</span>
+            <span className="text-[10px] lowercase font-semibold text-emerald-600 dark:text-emerald-400">Compulsory</span>
           </label>
           <div className="relative">
-            <Phone className="w-4 h-4 text-stone-400 dark:text-stone-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="tel"
+              required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="+233 24 123 4567"
+              placeholder="e.g. 024 123 4567 or +233 24 123 4567"
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800/60 text-sm text-stone-900 dark:text-white placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
             />
           </div>
+          <p className="text-[11px] text-stone-400 dark:text-stone-500 mt-1">
+            Required for delivery coordination and order updates via WhatsApp.
+          </p>
         </div>
 
         {/* Password */}

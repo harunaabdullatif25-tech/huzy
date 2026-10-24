@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Package, Zap, Rocket, Truck, MessageCircle, Phone } from 'lucide-react';
+import { Package, Zap, Rocket, Truck, MessageCircle, Phone, ShieldCheck } from 'lucide-react';
 
 export default function Footer() {
   const pathname = usePathname();

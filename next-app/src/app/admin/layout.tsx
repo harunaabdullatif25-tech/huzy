@@ -19,6 +19,18 @@ import {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [adminEmail, setAdminEmail] = React.useState<string>('Administrator');
+
+  React.useEffect(() => {
+    fetch('/api/admin/me')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.admin?.email) {
+          setAdminEmail(d.admin.email);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // If on admin login page, don't show the dashboard shell
   if (pathname === '/admin/login') {
@@ -29,6 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
       document.cookie = 'admin_session=; path=/; max-age=0';
+      document.cookie = 'customer_session=; path=/; max-age=0';
     } finally {
       router.push('/admin/login');
       router.refresh();
@@ -114,7 +127,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <ShieldCheck className="w-4 h-4 text-amber-500" />
               </span>
               <span className="text-xs font-medium text-stone-600 dark:text-stone-400">
-                admin@blossomandbox.com
+                {adminEmail}
               </span>
             </div>
 

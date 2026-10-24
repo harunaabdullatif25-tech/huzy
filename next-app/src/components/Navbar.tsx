@@ -22,6 +22,7 @@ import {
   LogIn,
   UserPlus,
   Home,
+  ShieldCheck,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -176,12 +177,26 @@ export default function Navbar() {
             <div className="hidden sm:flex items-center gap-2">
               {!authLoading && user ? (
                 <div className="flex items-center gap-2">
+                  {user.role === 'admin' && (
+                    <Link
+                      href="/admin"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-black transition shadow-2xs"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>Admin Panel</span>
+                    </Link>
+                  )}
                   <Link
                     href="/account"
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 dark:text-amber-300 border border-amber-500/30 text-xs font-bold transition"
                   >
                     <User className="w-3.5 h-3.5" />
                     <span className="max-w-[110px] truncate">{user.name.split(' ')[0]}</span>
+                    {user.role === 'admin' && (
+                      <span className="text-[9px] uppercase px-1.5 py-0.5 bg-amber-500 text-stone-950 rounded font-black leading-none">
+                        Admin
+                      </span>
+                    )}
                   </Link>
                   <button
                     type="button"
@@ -288,12 +303,27 @@ export default function Navbar() {
             </Link>
 
             {/* Customer Auth mobile options */}
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 space-y-1">
+            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 space-y-2">
               {user ? (
                 <>
-                  <div className="px-3 py-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                    Signed in as {user.name}
+                  <div className="px-3 py-1 text-xs font-semibold text-stone-500 dark:text-stone-400 flex items-center justify-between">
+                    <span>Signed in as <strong className="text-stone-900 dark:text-white">{user.name}</strong></span>
+                    {user.role === 'admin' && (
+                      <span className="text-[9px] uppercase px-1.5 py-0.5 bg-amber-500 text-stone-950 font-black rounded">
+                        Admin
+                      </span>
+                    )}
                   </div>
+                  {user.role === 'admin' && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-500 text-stone-950 font-bold text-sm shadow-2xs"
+                    >
+                      <ShieldCheck className="w-4 h-4" />
+                      <span>Admin Control Panel</span>
+                    </Link>
+                  )}
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);

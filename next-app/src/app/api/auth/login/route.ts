@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import { UserModel } from '@/models/User.model';
-import { verifyPassword, signToken } from '@/lib/auth';
+import { verifyPassword, hashPassword, signToken, ADMIN_CREDENTIALS } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,29 +18,48 @@ export async function POST(req: NextRequest) {
     await dbConnect();
 
     const normalizedEmail = email.toLowerCase().trim();
-    const user = await UserModel.findOne({ email: normalizedEmail });
+    let user = await UserModel.findOne({ email: normalizedEmail });
 
-    if (!user || !user.password) {
+    let isMatch = false;
+
+    // Check if matching configured admin credentials in .env.local
+    const isAdminEnv =
+      normalizedEmail === ADMIN_CREDENTIALS.email &&
+      password === ADMIN_CREDENTIALS.password;
+
+    if (isAdminEnv) {
+      isMatch = true;
+      if (!user) {
+        const hashedPassword = await hashPassword(password);
+        user = await UserModel.create({
+          name: 'Administrator',
+          email: normalizedEmail,
+          password: hashedPassword,
+          role: 'admin',
+        });
+      } else if (user.role !== 'admin') {
+        user.role = 'admin';
+        await user.save();
+      }
+    } else if (user && user.password) {
+      isMatch = await verifyPassword(password, user.password);
+    }
+
+    if (!isMatch || !user) {
       return NextResponse.json(
         { error: 'Invalid email or password.' },
         { status: 401 }
       );
     }
 
-    const isValid = await verifyPassword(password, user.password);
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid email or password.' },
-        { status: 401 }
-      );
-    }
+    const isAdmin = user.role === 'admin' || normalizedEmail === ADMIN_CREDENTIALS.email;
 
     // Generate JWT token
     const token = signToken({
       userId: String(user._id),
       email: user.email,
       name: user.name,
-      role: user.role,
+      role: isAdmin ? 'admin' : 'customer',
     });
 
     const response = NextResponse.json(
@@ -52,7 +71,7 @@ export async function POST(req: NextRequest) {
           name: user.name,
           email: user.email,
           phone: user.phone,
-          role: user.role,
+          role: isAdmin ? 'admin' : 'customer',
           address: user.address,
         },
       },
@@ -67,6 +86,17 @@ export async function POST(req: NextRequest) {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
+
+    // If user is an admin, also set admin_session cookie
+    if (isAdmin) {
+      response.cookies.set('admin_session', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+      });
+    }
 
     return response;
   } catch (error: any) {

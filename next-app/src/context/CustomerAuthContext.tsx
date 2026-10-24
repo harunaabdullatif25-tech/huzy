@@ -24,12 +24,12 @@ export interface CustomerUser {
 interface CustomerAuthContextType {
   user: CustomerUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; user?: CustomerUser }>;
   signup: (data: {
     name: string;
     email: string;
     password: string;
-    phone?: string;
+    phone: string;
   }) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
@@ -79,7 +79,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
       }
 
       setUser(data.user);
-      return { success: true };
+      return { success: true, user: data.user };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error occurred.' };
     }
@@ -89,7 +89,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
     name: string;
     email: string;
     password: string;
-    phone?: string;
+    phone: string;
   }) => {
     try {
       const res = await fetch('/api/auth/signup', {

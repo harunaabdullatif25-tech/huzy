@@ -10,7 +10,8 @@ import { Package, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'luci
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get('redirect') || '/account';
+  const rawRedirect = searchParams.get('redirect');
+  const redirectUrl = rawRedirect || '/account';
 
   const { login } = useCustomerAuth();
 
@@ -38,7 +39,12 @@ function LoginForm() {
     try {
       const result = await login(email.trim(), password);
       if (result.success) {
-        router.push(redirectUrl);
+        // If logged in as admin and not explicitly requesting a specific storefront page, take to /admin
+        if (result.user?.role === 'admin' && (!rawRedirect || rawRedirect === '/account')) {
+          router.push('/admin');
+        } else {
+          router.push(redirectUrl);
+        }
         router.refresh();
       } else {
         setError(result.error || 'Invalid email or password.');
@@ -157,7 +163,7 @@ function LoginForm() {
         <p className="text-xs text-stone-500 dark:text-stone-400">
           Don&apos;t have a Blossom&amp;Box account?{' '}
           <Link
-            href={`/signup${redirectUrl !== '/account' ? `?redirect=${encodeURIComponent(redirectUrl)}` : ''}`}
+            href={`/signup${rawRedirect ? `?redirect=${encodeURIComponent(rawRedirect)}` : ''}`}
             className="font-bold text-amber-600 dark:text-amber-400 hover:underline"
           >
             Create an account

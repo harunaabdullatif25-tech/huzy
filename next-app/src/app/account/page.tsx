@@ -20,6 +20,7 @@ import {
   CheckCircle,
   Truck,
   Box,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface OrderItemData {
@@ -226,10 +227,12 @@ export default function AccountPage() {
   }
 
   // User is logged in: show Customer Dashboard
+  const isAdmin = user.role === 'admin';
+
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 py-10 transition-colors">
       <div className="mx-auto max-w-5xl px-4 space-y-8">
-        {/* Customer Profile Banner */}
+        {/* Customer / Admin Profile Banner */}
         <div className="rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 sm:p-8 shadow-2xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-amber-500 text-stone-950 flex items-center justify-center font-black text-xl shadow-sm">
@@ -238,8 +241,14 @@ export default function AccountPage() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-black text-stone-900 dark:text-white">{user.name}</h1>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-amber-500/10 text-amber-800 dark:text-amber-300 rounded-full border border-amber-500/20">
-                  Customer
+                <span
+                  className={`text-[10px] uppercase font-black px-2.5 py-0.5 rounded-full border ${
+                    isAdmin
+                      ? 'bg-amber-500 text-stone-950 border-amber-500 shadow-2xs'
+                      : 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/20'
+                  }`}
+                >
+                  {isAdmin ? 'Administrator' : 'Customer'}
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-4 text-xs text-stone-500 dark:text-stone-400 mt-1">
@@ -257,7 +266,16 @@ export default function AccountPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center flex-wrap gap-2 w-full sm:w-auto">
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-black transition shadow-sm w-full sm:w-auto justify-center"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>Go to Admin Panel</span>
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => logout()}
@@ -268,6 +286,28 @@ export default function AccountPage() {
             </button>
           </div>
         </div>
+
+        {/* Administrator Callout Banner if user is Admin */}
+        {isAdmin && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-transparent border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-stone-900 dark:text-white font-black text-sm">
+                <ShieldCheck className="w-4 h-4 text-amber-500" />
+                <span>Administrator Workspace Access</span>
+              </div>
+              <p className="text-xs text-stone-600 dark:text-stone-400">
+                You are currently viewing the customer order history. To manage the box catalog, process customer orders, review quotes, or update store settings, switch to the Admin Control Panel.
+              </p>
+            </div>
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-stone-950 dark:bg-stone-100 text-white dark:text-stone-950 text-xs font-black hover:bg-amber-500 hover:text-stone-950 dark:hover:bg-amber-400 transition shrink-0 shadow-sm"
+            >
+              <span>Launch Admin Panel</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
 
         {/* Orders Header */}
         <div className="flex justify-between items-center">

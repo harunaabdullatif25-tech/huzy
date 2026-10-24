@@ -23,6 +23,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!phone || typeof phone !== 'string' || phone.trim().replace(/\D/g, '').length < 9) {
+      return NextResponse.json(
+        { error: 'WhatsApp phone number is compulsory (minimum 9 digits).' },
+        { status: 400 }
+      );
+    }
+
     if (!password || typeof password !== 'string' || password.length < 6) {
       return NextResponse.json(
         { error: 'Password must be at least 6 characters long.' },
@@ -49,7 +56,7 @@ export async function POST(req: NextRequest) {
       name: name.trim(),
       email: normalizedEmail,
       password: hashedPassword,
-      phone: phone ? phone.trim() : undefined,
+      phone: phone.trim(),
       role: 'customer',
     });
 
