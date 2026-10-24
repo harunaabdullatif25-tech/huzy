@@ -11,4 +11,4 @@ Disallow: /dashboard/
 Disallow: /api/
 
 # Sitemap location
-Sitemap: https://blossomandboxgh.com/sitemap.xml
+Sitemap: https://blossomandbox.vercel.app/sitemap.xml
