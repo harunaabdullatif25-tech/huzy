@@ -1,0 +1,68 @@
+import type { MetadataRoute } from 'next';
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: 'Blossom & Box Gh – Bespoke Packaging & Boxes',
+    short_name: 'Blossom & Box',
+    description:
+      'Bespoke made-to-order packaging and premium gift boxes in Ghana. MOQ = 1, custom dimensions, colors, and express delivery.',
+    start_url: '/',
+    id: '/',
+    display: 'standalone',
+    background_color: '#FAF7F2',
+    theme_color: '#A28242',
+    orientation: 'portrait-primary',
+    scope: '/',
+    lang: 'en',
+    categories: ['shopping', 'business', 'lifestyle'],
+    icons: [
+      {
+        src: '/icons/icon-192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-maskable-192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: '/icons/icon-maskable-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+    ],
+    shortcuts: [
+      {
+        name: 'Browse Boxes',
+        short_name: 'Products',
+        description: 'Explore our catalog of bespoke luxury boxes',
+        url: '/products',
+        icons: [{ src: '/icons/icon-192x192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'Get Custom Quote',
+        short_name: 'Custom Quote',
+        description: 'Request a custom dimensions box quote',
+        url: '/quote',
+        icons: [{ src: '/icons/icon-192x192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'Shopping Cart',
+        short_name: 'Cart',
+        description: 'View your selected boxes and checkout',
+        url: '/cart',
+        icons: [{ src: '/icons/icon-192x192.png', sizes: '192x192' }],
+      },
+    ],
+  };
+}

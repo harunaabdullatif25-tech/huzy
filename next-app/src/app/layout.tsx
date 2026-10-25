@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -7,6 +7,7 @@ import { CustomerAuthProvider } from '@/context/CustomerAuthContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
+import PWARegistration from '@/components/PWARegistration';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -18,15 +19,38 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FAF7F2' },
+    { media: '(prefers-color-scheme: dark)', color: '#0c0a09' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: 'Blossom & Box Gh – Where Every Gift Blooms | Bespoke Packaging & Boxes',
   description:
     'Blossom & Box Gh is a specialized packaging e-commerce platform offering bespoke made-to-order boxes, MOQ = 1, custom dimensions & colors, and express delivery in Ghana.',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Blossom & Box Gh',
+  },
   icons: {
-    icon: '/logo.png',
+    icon: [
+      { url: '/icons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/logo.png' },
+    ],
     shortcut: '/logo.png',
-    apple: '/logo.png',
+    apple: [
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
   openGraph: {
     title: 'Blossom & Box Gh – Where Every Gift Blooms',
@@ -70,6 +94,7 @@ export default function RootLayout({
               <div className="flex-1">{children}</div>
               <Footer />
               <WhatsAppWidget />
+              <PWARegistration />
             </CartProvider>
           </CustomerAuthProvider>
         </ThemeProvider>
